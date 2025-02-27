@@ -1,9 +1,12 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - master
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -25,21 +28,9 @@ jobs:
         env:
           CI: false  # This prevents treating warnings as errors
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: './build'
-
-  deploy:
-    needs: build-and-deploy
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          branch: gh-pages
+          folder: build
+          clean: true  # Automatically remove deleted files from the deploy branch
